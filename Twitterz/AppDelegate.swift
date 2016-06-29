@@ -7,15 +7,31 @@
 //
 
 import UIKit
+import BDBOAuth1Manager
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        
+        if(User.currentUser != nil) {
+            //There is a current user, set the initial View Controller to be the NavigationViewController before the TweetsViewController
+            print("There is a current user")
+            
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let tweetsNavVC = storyboard.instantiateViewControllerWithIdentifier("TweetsNavigationController")
+            window?.rootViewController = tweetsNavVC
+        }
+        
+        //If anyone posts UserDidLogout then this code block runs
+        NSNotificationCenter.defaultCenter().addObserverForName(User.userDidLogoutNotification, object: nil, queue: NSOperationQueue.mainQueue()) { (NSNotification) in
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let loginVC = storyboard.instantiateInitialViewController()
+            self.window?.rootViewController = loginVC
+        }
         return true
     }
 
@@ -40,7 +56,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
+    
+    /* Function: openURL
+     * If the Authentification was made, we are redirected back to this app and this function will be called. 
+     * In this function we again setup the Twitter client and then if fetchAccessTokenWithPath succeeds 
+     * in getting us an accessToken then we can go ahead and access the API's endpoints. 
+     * So, we use twitterclient.GET to get the JSON file data (see documentation online)
+     */
+    func application(app: UIApplication, openURL url: NSURL, options: [String : AnyObject]) -> Bool {
+        
+        //Setup the Twitter Client
+        let twitterclient = TwitterClient.sharedInstance
+    
+        twitterclient.handleOpenUrl(url)
+        
+        return true
+    }
 
-
+    
+    
+    
+    
 }
 
