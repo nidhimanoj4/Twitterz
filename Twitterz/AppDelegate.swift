@@ -14,17 +14,49 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
+    // Override point for customization after application launch.
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        // Override point for customization after application launch.
+        
+        
+ /*
+        //Set default initial ViewController to be the TabBarController
+        let tweetsNavVC = storyboard.instantiateViewControllerWithIdentifier("TweetsNavigationController")
+        
+        window?.rootViewController = tweetsNavVC
+        
+        
+        
+        //If the User is nil, then modify the initial ViewController to be the loginVC
+        if(User.currentUser != nil) {
+            //There is a current user, set the initial View Controller to be the TabBarController
+            print("There is a current user")
+            
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            
+            
+            let tweetsNavVC = storyboard.instantiateViewControllerWithIdentifier("TweetsNavigationController")
+            
+            window?.rootViewController = tweetsNavVC
+            
+            
+            //let loginVC = storyboard.instantiateViewControllerWithIdentifier("loginScreen") as UIViewController
+            //window?.rootViewController = loginVC
+        }
+        
+*/
         
         if(User.currentUser != nil) {
-            //There is a current user, set the initial View Controller to be the NavigationViewController before the TweetsViewController
+            //There is a current user, set the initial View Controller to be the TabBarController
             print("There is a current user")
             
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let tweetsNavVC = storyboard.instantiateViewControllerWithIdentifier("TweetsNavigationController")
+
             window?.rootViewController = tweetsNavVC
         }
+        
+        
+        
         
         //If anyone posts UserDidLogout then this code block runs
         NSNotificationCenter.defaultCenter().addObserverForName(User.userDidLogoutNotification, object: nil, queue: NSOperationQueue.mainQueue()) { (NSNotification) in
@@ -32,6 +64,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let loginVC = storyboard.instantiateInitialViewController()
             self.window?.rootViewController = loginVC
         }
+        
+        
+        
         return true
     }
 

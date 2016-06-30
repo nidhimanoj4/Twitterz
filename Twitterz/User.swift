@@ -16,6 +16,9 @@ class User: NSObject {
     var screenname: NSString?
     var descriptionTagline: NSString?
     var profileImageUrl: NSURL?
+    var numTweets: Int = 0
+    var numFollowing: Int = 0
+    var numFollowers: Int = 0
     
     var dictionary: NSDictionary?
     
@@ -24,7 +27,10 @@ class User: NSObject {
         name = dictionary["name"] as? String    //Attempt to cast as a String, otehrwise it is nil
         screenname = dictionary["screen_name"] as? String
         descriptionTagline = dictionary["description"] as? String
-
+        numTweets = (dictionary["statuses_count"] as? Int) ?? 0
+        numFollowing = (dictionary["friends_count"] as? Int) ?? 0
+        numFollowers = (dictionary["followers_count"] as? Int) ?? 0
+        
         let profile_image_url_string = dictionary["profile_image_url_https"] as? String
         if let profile_image_url_string = profile_image_url_string {
             profileImageUrl = NSURL(string: profile_image_url_string)

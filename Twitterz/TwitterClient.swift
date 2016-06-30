@@ -8,6 +8,7 @@
 
 import UIKit
 import BDBOAuth1Manager
+import SwiftyJSON
 
 class TwitterClient: BDBOAuth1SessionManager {
     static let sharedInstance = TwitterClient(baseURL: NSURL(string: "https://api.twitter.com")!, consumerKey: "7kygQDHFuBSq5aJaoyaempvX1", consumerSecret: "gsH9mjaUARlOeHj8HkgqU593PAcVjoZEPuMcoF4x5OkdCUh1DJ")
@@ -19,7 +20,6 @@ class TwitterClient: BDBOAuth1SessionManager {
     func login(success: () -> (), failure: (NSError) -> ()) {
         loginSuccess = success
         loginFailure = failure
-        
         
         //We need to authenticate that we are in fact the app creator who wants permission so get a request token (which sends user to the authorizing URL
         deauthorize() // This deauthorizes/logs out any previous sessions
@@ -50,8 +50,6 @@ class TwitterClient: BDBOAuth1SessionManager {
             }, failure: { (error: NSError) -> () in
                 self.loginFailure?(error)
             })
-            
-            
         }) { (error: NSError!) in
             print("Error: \(error.localizedDescription)")
             self.loginFailure?(error)
@@ -62,6 +60,21 @@ class TwitterClient: BDBOAuth1SessionManager {
         User.currentUser = nil
         deauthorize()
         NSNotificationCenter.defaultCenter().postNotificationName(User.userDidLogoutNotification, object: nil)
+    }
+    
+    func addTweet(textForNewTweet: String, success: () -> (), failure: (NSError) -> ()) {
+        
+        print("1.1/statuses/update.json?status=\(textForNewTweet)")
+        
+        //Use the POST function to post a tweet (save in background)
+        POST("1.1/statuses/update.json?status=\(textForNewTweet)", parameters: nil, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) in
+            print("Success: added a tweet")
+            success()
+        }) { (task: NSURLSessionDataTask?, error: NSError) in
+            print("Error: \(error.localizedDescription)")
+            failure(error)
+        }
+        
     }
     
     
@@ -93,6 +106,19 @@ class TwitterClient: BDBOAuth1SessionManager {
         })
     }
     
+    func userTimeline(userScreenname: NSString, success: ([Tweet]) -> (), failure: (NSError) -> ()) {
+        //Use the GET function to get the information in the JSON files about the home timeline
+        GET("1.1/statuses/user_timeline.json?screen_name=\(userScreenname)", parameters: nil, progress: nil, success:
+            { (task: NSURLSessionDataTask, response: AnyObject?) in
+                let dictionaries = response as! [NSDictionary]
+                let mytweets = Tweet.tweetsWithArray(dictionaries)
+                
+                success(mytweets)
+            }, failure: { (task: NSURLSessionDataTask?, error: NSError) in
+                failure(error)
+                print("Error: \(error.localizedDescription)")
+        })
+    }
     
     class func incrementLikes(tweet: Tweet, success: (Bool) -> (), failure: (NSError) -> ()) {
         //Update the favorite_count variable in the data/network (Note: instructions provide a link for a POST function in the API)
@@ -144,6 +170,8 @@ class TwitterClient: BDBOAuth1SessionManager {
             failure(error)
         }
     }
-
+    
+    
+    
     
 }

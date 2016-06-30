@@ -1,16 +1,14 @@
 //
-//  TweetCell.swift
+//  userTweetCell.swift
 //  Twitterz
 //
-//  Created by Nidhi Manoj on 6/28/16.
+//  Created by Nidhi Manoj on 6/30/16.
 //  Copyright © 2016 Nidhi Manoj. All rights reserved.
 //
 
 import UIKit
 
-class TweetCell: UITableViewCell {
-
-    
+class userTweetCell: UITableViewCell {
     @IBOutlet weak var userLabel: UILabel!
     @IBOutlet weak var photoView: UIImageView!
     @IBOutlet weak var taglineLabel: UILabel!
@@ -25,7 +23,7 @@ class TweetCell: UITableViewCell {
         didSet {
             let tweet = tweetWrapped!
             let user = tweet.userForTweet
-                        
+            
             let usernameAsString = String(user!.name!) ?? ""
             userLabel.text = usernameAsString
             
@@ -53,33 +51,6 @@ class TweetCell: UITableViewCell {
         }
     }
     
- /*   func handleLikeButtonClicked() {
-        //Get the tweet
-        let tweet = tweetWrapped!
-        
-        //Increment/Decrement the tweet's favoriteCount variable
-        if tweet.favorited == false {
-            //Like the tweet
-            tweet.favorited = true
-            TwitterClient.incrementLikes(tweet, success: { (didIncrementWork: Bool) in
-                tweet.favoriteCount += 1
-                self.favoritesCountLabel.text = String(tweet.favoriteCount) + " favorites"
-                self.likeButton.selected = true  //default is gray heart, selected is red heart
-            }) { (error: NSError) in
-            }
-        } else {
-            //Unlike the tweet
-            tweet.favorited = false
-            TwitterClient.decrementLikes(tweet, success: { (didIncrementWork: Bool) in
-                tweet.favoriteCount -= 1
-                self.favoritesCountLabel.text = String(tweet.favoriteCount) + " favorites"
-                self.likeButton.selected = false
-            }) { (error: NSError) in
-            }
-        }
-
-    }
- */   
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

@@ -20,10 +20,13 @@ import UIKit
 
 class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet weak var tableView: UITableView!
-    var tweets: [Tweet]!
+    @IBOutlet weak var addTaglineTextField: UITextField!
+    var tweets: [Tweet]! = []
+    var justOpenedDetailPostViewController = false
     
     // Initialize a UIRefreshControl
     let refreshControl = UIRefreshControl()
+    
     
     /* Function: refreshTableViewData
      * Updates the tableView with the new data
@@ -48,7 +51,7 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
 
         tableView.delegate = self
         tableView.dataSource = self
-        
+
         //We already instantiated a global UIRefreshControl at the top
         refreshControl.addTarget(self, action: #selector(refreshTableViewData), forControlEvents: UIControlEvents.ValueChanged)
         tableView.insertSubview(refreshControl, atIndex: 0)
@@ -56,41 +59,78 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         refreshTableViewData()
     }
     
+    override func viewDidAppear(animated: Bool) {
+        if justOpenedDetailPostViewController {
+            refreshTableViewData()
+        }
+        justOpenedDetailPostViewController = false
+    }
+    
+    
+    @IBAction func onImageButtonClicked(sender: AnyObject) {
+        performSegueWithIdentifier("userProfileSegue", sender: sender)
+    }
     
     @IBAction func onLogoutButton(sender: AnyObject) {
         TwitterClient.sharedInstance.logout()
     }
+    
+    
+    @IBAction func onAddTweetClicked(sender: AnyObject) {
+        let originalString = addTaglineTextField.text! ?? ""
+        
+        var newTextForTweet = originalString.stringByAddingPercentEncodingWithAllowedCharacters(.URLHostAllowedCharacterSet())
+        
+        TwitterClient.sharedInstance.addTweet(newTextForTweet!, success: { 
+            self.refreshTableViewData()
+
+        }) { (error: NSError) in
+        }
+    }
+    
+    
     
     @IBAction func onLikeButton(sender: AnyObject) {
         //Get that tweet by using sender = button -> super = contentView -> super = TweetCell
         let likeButton = sender as! UIButton
         let cell = (likeButton.superview)!.superview as! TweetCell
         
-        //Get indexPath from cell by saying tableView.indexPathFromCell(cell)
-        let indexPath = tableView.indexPathForCell(cell)
-        //Get the tweet by saying tweets[indexPath.row]
-        let tweet = tweets[indexPath!.row]
-        
-        //Increment/Decrement the tweet's favoriteCount variable
-        if tweet.favorited == false {
-            //Like the tweet
-            TwitterClient.incrementLikes(tweet, success: { (didIncrementWork: Bool) in
-                tweet.favoriteCount += 1
-                cell.favoritesCountLabel.text = String(tweet.favoriteCount) + " favorites"
-                likeButton.selected = true  //default is gray heart, selected is red heart
-                self.refreshTableViewData()
-            }) { (error: NSError) in
+/*       dispatch_async(dispatch_get_main_queue()){
+            cell.handleLikeButtonClicked()
+            //TweetCell has an instance function that will, (depending on if the tweet is currently favorited or not) call incrementLikes/decrementLikes, update the favoriteCount, change the cell's favoriteCountLabel.text, and update the likeButton's image
+            //Afterwards, update the tableView to reflect changes in the likes
+
+            self.refreshTableViewData()
+         }
+*/
+            //Get indexPath from cell by saying tableView.indexPathFromCell(cell)
+            let indexPath = tableView.indexPathForCell(cell)
+            //Get the tweet by saying tweets[indexPath.row]
+            let tweet = tweets[indexPath!.row]
+            
+            //Increment/Decrement the tweet's favoriteCount variable
+            if tweet.favorited == false {
+                //Like the tweet
+                tweet.favorited = true
+                TwitterClient.incrementLikes(tweet, success: { (didIncrementWork: Bool) in
+                    tweet.favoriteCount += 1
+                    cell.favoritesCountLabel.text = String(tweet.favoriteCount)
+                    likeButton.selected = true  //default is gray heart, selected is red heart
+                    self.refreshTableViewData()
+                }) { (error: NSError) in
+                }
+            } else {
+                //Unlike the tweet
+                tweet.favorited = false
+                TwitterClient.decrementLikes(tweet, success: { (didIncrementWork: Bool) in
+                    tweet.favoriteCount -= 1
+                    cell.favoritesCountLabel.text = String(tweet.favoriteCount)
+                    likeButton.selected = false
+                    self.refreshTableViewData()
+                }) { (error: NSError) in
+                }
             }
-        } else {
-            //Unlike the tweet
-            TwitterClient.decrementLikes(tweet, success: { (didIncrementWork: Bool) in
-                tweet.favoriteCount -= 1
-                cell.favoritesCountLabel.text = String(tweet.favoriteCount) + " favorites"
-                likeButton.selected = false
-                self.refreshTableViewData()
-            }) { (error: NSError) in
-            }
-        }
+
     }
     
     
@@ -109,7 +149,7 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
             //Like the tweet
             TwitterClient.incrementRetweets(tweet, success: { (didIncrementWork: Bool) in
                 tweet.retweetCount += 1
-                cell.retweetCountLabel.text = String(tweet.retweetCount) + " retweets"
+                cell.retweetCountLabel.text = String(tweet.retweetCount)
                 retweetButton.selected = true  //default is gray icon, selected is green icon
                 self.refreshTableViewData()
             }) { (error: NSError) in
@@ -118,7 +158,7 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
             //Unlike the tweet
             TwitterClient.decrementRetweets(tweet, success: { (didIncrementWork: Bool) in
                 tweet.retweetCount -= 1
-                cell.retweetCountLabel.text = String(tweet.retweetCount) + " retweets"
+                cell.retweetCountLabel.text = String(tweet.retweetCount)
                 retweetButton.selected = false
                 self.refreshTableViewData()
             }) { (error: NSError) in
@@ -145,43 +185,42 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         let tweetCell = tableView.dequeueReusableCellWithIdentifier("TweetCell", forIndexPath: indexPath) as! TweetCell
         let tweet = tweets[indexPath.row]
         
-        let user = tweet.userForTweet
-        tweetCell.userLabel.text = user!.name as? String
-        
-        let userProfileImageUrl = user!.profileImageUrl
-        dispatch_async(dispatch_get_main_queue()){
-            tweetCell.photoView.setImageWithURL(userProfileImageUrl!)
-        }
-
-        
-        tweetCell.taglineLabel.text = tweet.text as? String
-        tweetCell.retweetCountLabel.text = String(tweet.retweetCount) + " retweets"
-        tweetCell.favoritesCountLabel.text = String(tweet.favoriteCount) + " favorites"
-        tweetCell.timestampLabel.text = String(tweet.relativeTime!)
-
-        if tweet.favorited == false {
-            tweetCell.likeButton.selected = false //If not liked, then present a gray heart
-        } else {
-            tweetCell.likeButton.selected = true //If liked, then present a red heart
-        }
-        
-        if tweet.retweeted == false {
-            tweetCell.retweetButton.selected = false //If not liked, then present a gray retweet icon
-        } else {
-            tweetCell.retweetButton.selected = true //If liked, then present a green retweet icon
-        }
+        tweetCell.tweetWrapped = tweet
+        //In the TweetCell, there is a didSet that will set all the cell's labels and images using the tweet that we have given to TweetCell
         
         return tweetCell
     }
 
-    /*
+    
     // MARK: - Navigation
-
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
+        
+        
+        if (segue.identifier == "detailTweetSegue") {
+            let cell = sender as! UITableViewCell
+            let indexPath =  tableView.indexPathForCell(cell)
+            let tweet = tweets[indexPath!.row]
+            let detailTweetViewController = segue.destinationViewController as! DetailTweetViewController
+            detailTweetViewController.tweet = tweet
+            justOpenedDetailPostViewController = true
+        }
+        if (segue.identifier == "userProfileSegue") {
+            
+            let buttonOnImage = sender as! UIButton
+            let cell = (buttonOnImage.superview)!.superview as! TweetCell
+            let indexPath =  tableView.indexPathForCell(cell)
+            let tweet = tweets[indexPath!.row]
+            
+            
+            let userProfileViewController = segue.destinationViewController as! UserProfileViewController
+            userProfileViewController.user = tweet.userForTweet
+        }
+
+
     }
-    */
+
 
 }
