@@ -14,59 +14,54 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
+
     // Override point for customization after application launch.
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        
-        
- /*
         //Set default initial ViewController to be the TabBarController
-        let tweetsNavVC = storyboard.instantiateViewControllerWithIdentifier("TweetsNavigationController")
         
-        window?.rootViewController = tweetsNavVC
+        window = UIWindow(frame: UIScreen.mainScreen().bounds)
+        //Set up two tabs - Tweets/Feed and MyProfile
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+
+        //Get the first Navigation Controller and the first ViewController it has
+        let tweetsNavController = storyboard.instantiateViewControllerWithIdentifier("TweetsNavigationController") as! UINavigationController
+/*        let tweetsViewController = tweetsNavController.topViewController as! TweetsViewController
         
-        
-        
-        //If the User is nil, then modify the initial ViewController to be the loginVC
-        if(User.currentUser != nil) {
-            //There is a current user, set the initial View Controller to be the TabBarController
-            print("There is a current user")
-            
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            
-            
-            let tweetsNavVC = storyboard.instantiateViewControllerWithIdentifier("TweetsNavigationController")
-            
-            window?.rootViewController = tweetsNavVC
-            
-            
-            //let loginVC = storyboard.instantiateViewControllerWithIdentifier("loginScreen") as UIViewController
-            //window?.rootViewController = loginVC
-        }
-        
+        let userProfileViewController = ______
+        userProfileViewController.user =  //Wait don't I already set this nicely in the performSegue????
 */
         
-        if(User.currentUser != nil) {
-            //There is a current user, set the initial View Controller to be the TabBarController
-            print("There is a current user")
-            
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let tweetsNavVC = storyboard.instantiateViewControllerWithIdentifier("TweetsNavigationController")
+        //Get the second Navigation Controller and the first ViewController it has
+        let myProfileNavController = storyboard.instantiateViewControllerWithIdentifier("MyProfileNavigationController") as! UINavigationController
+        let myprofileViewController  = myProfileNavController.topViewController as! UserProfileViewController
+        myprofileViewController.user = User.currentUser //This should be currentUser
+        
+        
+        //Set default initial ViewController to be the TabBarController
+        let tabBarController = UITabBarController()
+        tabBarController.viewControllers = [tweetsNavController, myProfileNavController]
 
-            window?.rootViewController = tweetsNavVC
+        window?.rootViewController = tabBarController
+        window?.makeKeyAndVisible()
+
+        
+        //If the User is nil, then modify the initial ViewController to be the loginVC
+        if(User.currentUser == nil) {
+            print("There is no current user")
+            
+            let loginVC = storyboard.instantiateViewControllerWithIdentifier("loginScreen")
+            window?.rootViewController = loginVC
         }
-        
-        
         
         
         //If anyone posts UserDidLogout then this code block runs
         NSNotificationCenter.defaultCenter().addObserverForName(User.userDidLogoutNotification, object: nil, queue: NSOperationQueue.mainQueue()) { (NSNotification) in
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let loginVC = storyboard.instantiateInitialViewController()
+            let loginVC = storyboard.instantiateViewControllerWithIdentifier("loginScreen")
             self.window?.rootViewController = loginVC
         }
         
-        
-        
+    
         return true
     }
 

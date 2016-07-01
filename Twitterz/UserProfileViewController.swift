@@ -26,7 +26,7 @@ class UserProfileViewController: UIViewController, UITableViewDelegate, UITableV
     let refreshControl = UIRefreshControl()
     
     func setProfileInfo() {
-        usernameLabel.text = "Username: \(user.name!) "
+        usernameLabel.text = "\(user.name!)"
         let userProfileImageUrl = user.profileImageUrl
         dispatch_async(dispatch_get_main_queue()){
             self.photoView.setImageWithURL(userProfileImageUrl!)
@@ -65,6 +65,11 @@ class UserProfileViewController: UIViewController, UITableViewDelegate, UITableV
         
         refreshUserTableViewData()
     }
+    
+    override func viewDidAppear(animated: Bool) {
+        refreshUserTableViewData()
+    }
+    
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let mytweets = mytweets {
