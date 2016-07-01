@@ -20,6 +20,7 @@ class UserProfileViewController: UIViewController, UITableViewDelegate, UITableV
     @IBOutlet weak var numTweetsLabel: UILabel!
     @IBOutlet weak var numFollowingLabel: UILabel!
     @IBOutlet weak var numFollowersLabel: UILabel!
+    @IBOutlet weak var backgroundPhotoView: UIImageView!
     
     var mytweets: [Tweet]! = []
     // Initialize a UIRefreshControl
@@ -31,11 +32,21 @@ class UserProfileViewController: UIViewController, UITableViewDelegate, UITableV
         dispatch_async(dispatch_get_main_queue()){
             self.photoView.setImageWithURL(userProfileImageUrl!)
         }
+        let userBackgroundImageUrl = user.profileBackgroundImageUrl
+        if userBackgroundImageUrl != nil {
+            dispatch_async(dispatch_get_main_queue()){
+                self.backgroundPhotoView.setImageWithURL(userBackgroundImageUrl!)
+            }
+        }
+        
         descriptionTagline.text = user.descriptionTagline as? String
         numTweetsLabel.text = "\(user.numTweets) tweets"
         numFollowingLabel.text = "\(user.numFollowing) following"
         numFollowersLabel.text = "\(user.numFollowers) followers"
     }
+    
+    
+    
     
     func refreshUserTableViewData() {
         let twitterclient = TwitterClient.sharedInstance

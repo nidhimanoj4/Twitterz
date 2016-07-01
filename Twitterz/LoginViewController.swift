@@ -9,8 +9,11 @@
 import UIKit
 import BDBOAuth1Manager
 
-class LoginViewController: UIViewController {
+class LoginViewController: UIViewController, UIGestureRecognizerDelegate {
 
+    var movingCircle: UIView!
+    var movingCircleOriginalCenter: CGPoint!
+    
     @IBOutlet weak var loginButton: UIButton!
     
     override func viewDidLoad() {
@@ -20,12 +23,78 @@ class LoginViewController: UIViewController {
         loginButton.clipsToBounds = true
         
     }
+    @IBAction func didPanCircle(sender: UIPanGestureRecognizer) {
+        let translation = sender.translationInView(view)
+        if (sender.state == .Began) {
+            var circleView = sender.view!
+            movingCircle = circleView
+            
+            //Create a Pan Gesture Recognizer that calls onCustomPan and allows you to continue to pan the face
+            let gestureRecognizerForFace = UIPanGestureRecognizer(target: self, action: "onCustomPan:")
+            movingCircle.addGestureRecognizer(gestureRecognizerForFace)
+            
+            //Create a Pinch Gesture Recognizer that allows you to scale the size of the face
+            let pinchgestureRecognizerForFace = UIPinchGestureRecognizer(target: self, action: "onCustomScale:")
+            movingCircle.addGestureRecognizer(pinchgestureRecognizerForFace)
+            pinchgestureRecognizerForFace.delegate = self
+            
+            //Create a Tap Gesture Recognizer that allows you to delete the face on 2 taps
+            let tapgestureRecognizerForFace = UITapGestureRecognizer(target: self, action: "onCustomDelete:")
+            tapgestureRecognizerForFace.numberOfTapsRequired = 2
+            movingCircle.addGestureRecognizer(tapgestureRecognizerForFace)
+            
+            
+            movingCircle.userInteractionEnabled = true
+            movingCircle.center = circleView.center
+            
+            
+            movingCircleOriginalCenter = movingCircle.center
+            
+            UIView.animateWithDuration(0.3, animations: {
+                self.movingCircle.transform = CGAffineTransformScale(self.movingCircle.transform, 9/8,9/8)
+            })
+        } else if (sender.state == .Changed) {
+            movingCircle.center = CGPoint(x: movingCircleOriginalCenter.x + translation.x, y: movingCircleOriginalCenter.y + translation.y)
+        } else if (sender.state == .Ended) {
+            UIView.animateWithDuration(0.3, animations: {
+                self.movingCircle.transform = CGAffineTransformScale(self.movingCircle.transform, 8/9,8/9)
+            })
+        }
+    }
+    
+    func onCustomPan(sender: UIPanGestureRecognizer){
+        let translation = sender.translationInView(view)
+        if (sender.state == .Began){
+            movingCircle = sender.view!
+            movingCircleOriginalCenter = movingCircle.center
+            UIView.animateWithDuration(0.3, animations: {
+                self.movingCircle.transform = CGAffineTransformScale(self.movingCircle.transform, 9/8,9/8)
+            })
+        }else if (sender.state == .Changed){
+            movingCircle.center = CGPoint(x: movingCircleOriginalCenter.x + translation.x, y: movingCircleOriginalCenter.y + translation.y)
+        }else if (sender.state == .Ended){
+            UIView.animateWithDuration(0.3, animations: {
+                self.movingCircle.transform = CGAffineTransformScale(self.movingCircle.transform, 8/9,8/9)
+            })
+        }
+    }
+    
+    func onCustomScale(sender: UIPinchGestureRecognizer) {
+        let scaleValue = sender.scale
+        UIView.animateWithDuration(0.3) {
+            self.movingCircle.transform = CGAffineTransformScale(self.movingCircle.transform, scaleValue, scaleValue)
+        }
+    }
+    
+    func onCustomDelete(sender: UITapGestureRecognizer){
+        let movingCircle = sender.view!
+        movingCircle.removeFromSuperview()
+    }
+    
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
-        
-        
     }
     
     
@@ -41,12 +110,12 @@ class LoginViewController: UIViewController {
             //Login was not a success, I already print an error message, print again
             print("Error: \(error.localizedDescription)")
         }
-        
-        
     }
     
     
-    
+    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
 
     /*
     // MARK: - Navigation
