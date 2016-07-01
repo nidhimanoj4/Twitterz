@@ -133,6 +133,7 @@
 				5C4AAE891D231B8300402A59 /* TweetsViewController.swift */,
 				5C152AD91D2496D700853E9E /* DetailTweetViewController.swift */,
 				5C152ADD1D25828E00853E9E /* UserProfileViewController.swift */,
+				5C9DD1551D26F551006E4BB4 /* Files for cocoapod */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -146,6 +147,13 @@
 				5C2908F81D25C8D900FCF9CC /* userTweetCell.swift */,
 			);
 			name = Models;
+			sourceTree = "<group>";
+		};
+		5C9DD1551D26F551006E4BB4 /* Files for cocoapod */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Files for cocoapod";
 			sourceTree = "<group>";
 		};
 		5CE7309B1D218D68000832DF = {

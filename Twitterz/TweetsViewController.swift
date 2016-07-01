@@ -24,10 +24,8 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     @IBOutlet weak var addTaglineTextField: UITextField!
     var tweets: [Tweet]! = []
     var justOpenedDetailPostViewController = false
-    
     // Initialize a UIRefreshControl - we no longer need this because we substituted the cocoapod refresh animation
     //let refreshControl = UIRefreshControl()
-    
     
     /* Function: refreshTableViewData
      * Updates the tableView with the new data
@@ -39,34 +37,34 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         twitterclient.homeTimeline({ (tweetsArray: [Tweet]) -> () in
             self.tweets = tweetsArray
             self.tableView.reloadData()
-            
             // Tell the refreshControl to stop spinning - we no longer need this because we substituted the cocoapod refresh animation
             //self.refreshControl.endRefreshing()
-            
         }) { (error: NSError) -> () in
             print("Error: \(error.localizedDescription)")
         }
     }
     
-    deinit {
+/*    deinit {
         tableView.dg_removePullToRefresh()
+    }
+ */
+    override func viewDidAppear(animated: Bool) {
+        if justOpenedDetailPostViewController {
+            refreshTableViewData()
+        }
+        justOpenedDetailPostViewController = false
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
         tableView.delegate = self
         tableView.dataSource = self
-
 /*      //We no longer need this because we substituted the cocoapod refresh animation  
         //We already instantiated a global UIRefreshControl at the top
         refreshControl.addTarget(self, action: #selector(refreshTableViewData), forControlEvents: UIControlEvents.ValueChanged)
         tableView.insertSubview(refreshControl, atIndex: 0)
 */
         refreshTableViewData()
-        
-        
-        
         
         /* Here is where cocoa pod pull to refresh animation code begins */
         // Initialize tableView
@@ -78,17 +76,10 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
             }, loadingView: loadingView)
         tableView.dg_setPullToRefreshFillColor(UIColor(red: 137/255.0, green: 204/255.0, blue: 255/255.0, alpha: 1.0))
         tableView.dg_setPullToRefreshBackgroundColor(tableView.backgroundColor!)
-        
         /* Here is where the cocoa pod pull to refresh animation code ends. There is also a deinit function ontop */
         
     }
     
-    override func viewDidAppear(animated: Bool) {
-        if justOpenedDetailPostViewController {
-            refreshTableViewData()
-        }
-        justOpenedDetailPostViewController = false
-    }
     
     
     @IBAction func onImageButtonClicked(sender: AnyObject) {
@@ -102,7 +93,6 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     @IBAction func onAddTweetClicked(sender: AnyObject) {
         let originalString = addTaglineTextField.text! ?? ""
-        
         var newTextForTweet = originalString.stringByAddingPercentEncodingWithAllowedCharacters(.URLHostAllowedCharacterSet())
         
         TwitterClient.sharedInstance.addTweet(newTextForTweet!, success: { 
@@ -213,8 +203,6 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
-        
-        
         if (segue.identifier == "detailTweetSegue") {
             let cell = sender as! UITableViewCell
             let indexPath =  tableView.indexPathForCell(cell)
@@ -229,7 +217,6 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
             let cell = (buttonOnImage.superview)!.superview as! TweetCell
             let indexPath =  tableView.indexPathForCell(cell)
             let tweet = tweets[indexPath!.row]
-            
             
             let userProfileViewController = segue.destinationViewController as! UserProfileViewController
             userProfileViewController.user = tweet.userForTweet
