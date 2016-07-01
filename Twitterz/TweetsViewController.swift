@@ -17,6 +17,7 @@
 */
 
 import UIKit
+import DGElasticPullToRefresh
 
 class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet weak var tableView: UITableView!
@@ -24,8 +25,8 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     var tweets: [Tweet]! = []
     var justOpenedDetailPostViewController = false
     
-    // Initialize a UIRefreshControl
-    let refreshControl = UIRefreshControl()
+    // Initialize a UIRefreshControl - we no longer need this because we substituted the cocoapod refresh animation
+    //let refreshControl = UIRefreshControl()
     
     
     /* Function: refreshTableViewData
@@ -38,13 +39,18 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         twitterclient.homeTimeline({ (tweetsArray: [Tweet]) -> () in
             self.tweets = tweetsArray
             self.tableView.reloadData()
-            // Tell the refreshControl to stop spinning
-            self.refreshControl.endRefreshing()
+            
+            // Tell the refreshControl to stop spinning - we no longer need this because we substituted the cocoapod refresh animation
+            //self.refreshControl.endRefreshing()
+            
         }) { (error: NSError) -> () in
             print("Error: \(error.localizedDescription)")
         }
     }
     
+    deinit {
+        tableView.dg_removePullToRefresh()
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,11 +58,29 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         tableView.delegate = self
         tableView.dataSource = self
 
+/*      //We no longer need this because we substituted the cocoapod refresh animation  
         //We already instantiated a global UIRefreshControl at the top
         refreshControl.addTarget(self, action: #selector(refreshTableViewData), forControlEvents: UIControlEvents.ValueChanged)
         tableView.insertSubview(refreshControl, atIndex: 0)
-        
+*/
         refreshTableViewData()
+        
+        
+        
+        
+        /* Here is where cocoa pod pull to refresh animation code begins */
+        // Initialize tableView
+        let loadingView = DGElasticPullToRefreshLoadingViewCircle()
+        loadingView.tintColor = UIColor(red: 78/255.0, green: 70/255.0, blue: 200/255.0, alpha: 0.1)
+        tableView.dg_addPullToRefreshWithActionHandler({ [weak self] () -> Void in
+            // Do not forget to call dg_stopLoading() at the end
+            self?.tableView.dg_stopLoading()
+            }, loadingView: loadingView)
+        tableView.dg_setPullToRefreshFillColor(UIColor(red: 137/255.0, green: 204/255.0, blue: 255/255.0, alpha: 1.0))
+        tableView.dg_setPullToRefreshBackgroundColor(tableView.backgroundColor!)
+        
+        /* Here is where the cocoa pod pull to refresh animation code ends. There is also a deinit function ontop */
+        
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -215,4 +239,8 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
 
 
+}
+
+extension UIScrollView {
+    func dg_stopScrollingAnimation() {}
 }

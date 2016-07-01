@@ -10,6 +10,7 @@ target 'Twitterz' do
     pod 'BDBOAuth1Manager', '2.0.0'
     pod 'PrettyTimestamp'
     pod 'SwiftyJSON'
+    pod "DGElasticPullToRefresh"
 end
 
 target 'TwitterzTests' do

@@ -14,6 +14,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>DGElasticPullToRefresh.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods-Twitterz.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -42,6 +47,16 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>115824B7CB2E76E5ACB836A251E79404</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>1ADA323437A005A570622983B3B575D8</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>1C3436CEA5C3D39764C5F54374794ECB</key>
 		<dict>
 			<key>primary</key>
@@ -52,17 +67,12 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>4F07104DC7F7C25BC29D9CB2E3923EE7</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>5E793015A9557849BDDD8C0B3E9BFC40</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
 		<key>747B1131840B5C3CCEA2A43EDF69A15A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>8C4E9DE3064AEEEAB10B8B7124BFBDA2</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -72,7 +82,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>EF9FCF7C48FDDE848DD13C2640FF0970</key>
+		<key>F3FE522957CB6F2B8C12B5AA47281663</key>
 		<dict>
 			<key>primary</key>
 			<true/>

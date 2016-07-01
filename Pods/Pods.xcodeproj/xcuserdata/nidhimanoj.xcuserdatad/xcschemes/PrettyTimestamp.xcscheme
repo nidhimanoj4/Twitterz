@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = 'EF9FCF7C48FDDE848DD13C2640FF0970'
+               BlueprintIdentifier = '1ADA323437A005A570622983B3B575D8'
                BlueprintName = 'PrettyTimestamp'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'PrettyTimestamp.framework'>

@@ -9,7 +9,7 @@
 import UIKit
 import BDBOAuth1Manager
 
-class LoginViewController: UIViewController, UIGestureRecognizerDelegate {
+class LoginViewController: UIViewController {
 
     var movingCircle: UIView!
     var movingCircleOriginalCenter: CGPoint!
@@ -32,11 +32,6 @@ class LoginViewController: UIViewController, UIGestureRecognizerDelegate {
             //Create a Pan Gesture Recognizer that calls onCustomPan and allows you to continue to pan the face
             let gestureRecognizerForFace = UIPanGestureRecognizer(target: self, action: "onCustomPan:")
             movingCircle.addGestureRecognizer(gestureRecognizerForFace)
-            
-            //Create a Pinch Gesture Recognizer that allows you to scale the size of the face
-            let pinchgestureRecognizerForFace = UIPinchGestureRecognizer(target: self, action: "onCustomScale:")
-            movingCircle.addGestureRecognizer(pinchgestureRecognizerForFace)
-            pinchgestureRecognizerForFace.delegate = self
             
             //Create a Tap Gesture Recognizer that allows you to delete the face on 2 taps
             let tapgestureRecognizerForFace = UITapGestureRecognizer(target: self, action: "onCustomDelete:")
@@ -79,13 +74,6 @@ class LoginViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
-    func onCustomScale(sender: UIPinchGestureRecognizer) {
-        let scaleValue = sender.scale
-        UIView.animateWithDuration(0.3) {
-            self.movingCircle.transform = CGAffineTransformScale(self.movingCircle.transform, scaleValue, scaleValue)
-        }
-    }
-    
     func onCustomDelete(sender: UITapGestureRecognizer){
         let movingCircle = sender.view!
         movingCircle.removeFromSuperview()
@@ -113,10 +101,6 @@ class LoginViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     
-    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return true
-    }
-
     /*
     // MARK: - Navigation
 

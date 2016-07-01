@@ -16,21 +16,24 @@ PODS:
     - AFNetworking/NSURLSession
   - BDBOAuth1Manager (2.0.0):
     - AFNetworking/NSURLSession (~> 3.0.0)
+  - DGElasticPullToRefresh (1.0.3)
   - PrettyTimestamp (1.2.1)
   - SwiftyJSON (2.3.2)
 
 DEPENDENCIES:
   - AFNetworking (= 3.0.0)
   - BDBOAuth1Manager (= 2.0.0)
+  - DGElasticPullToRefresh
   - PrettyTimestamp
   - SwiftyJSON
 
 SPEC CHECKSUMS:
   AFNetworking: 932ff751f9d6fb1dad0b3af58b7e3ffba0a4e7fd
   BDBOAuth1Manager: 92d17d06f8a648602962304cd2f35ae7394fa001
+  DGElasticPullToRefresh: 040f39ae69840b3261d163fe6735c5901bf851e9
   PrettyTimestamp: e355b8abd6ea1d697cfa8c8d60b4133b08beaf43
   SwiftyJSON: 04ccea08915aa0109039157c7974cf0298da292a
 
-PODFILE CHECKSUM: b855d98daef3e221909b0290b2302a86ebcdb4c3
+PODFILE CHECKSUM: e0e36e6e84ae51a44895c62d7d6ffd1665933fb7
 
 COCOAPODS: 1.0.1
