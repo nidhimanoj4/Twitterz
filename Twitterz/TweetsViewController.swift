@@ -95,14 +95,6 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         let likeButton = sender as! UIButton
         let cell = (likeButton.superview)!.superview as! TweetCell
         
-/*       dispatch_async(dispatch_get_main_queue()){
-            cell.handleLikeButtonClicked()
-            //TweetCell has an instance function that will, (depending on if the tweet is currently favorited or not) call incrementLikes/decrementLikes, update the favoriteCount, change the cell's favoriteCountLabel.text, and update the likeButton's image
-            //Afterwards, update the tableView to reflect changes in the likes
-
-            self.refreshTableViewData()
-         }
-*/
             //Get indexPath from cell by saying tableView.indexPathFromCell(cell)
             let indexPath = tableView.indexPathForCell(cell)
             //Get the tweet by saying tweets[indexPath.row]

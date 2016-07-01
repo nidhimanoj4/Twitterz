@@ -29,13 +29,14 @@ class DetailTweetViewController: UIViewController {
         userLabel.text = user!.name as? String
         
         let userProfileImageUrl = user!.profileImageUrl
+        
         dispatch_async(dispatch_get_main_queue()){
             self.photoView.setImageWithURL(userProfileImageUrl!)
         }
         
         taglineLabel.text = tweet.text as? String
-        retweetCountLabel.text = String(tweet.retweetCount) + " retweets"
-        favoritesCountLabel.text = String(tweet.favoriteCount) + " favorites"
+        retweetCountLabel.text = String(tweet.retweetCount)
+        favoritesCountLabel.text = String(tweet.favoriteCount)
         timestampLabel.text = String(tweet.relativeTime!)
         
         if tweet.favorited == false {

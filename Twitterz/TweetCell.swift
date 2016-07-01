@@ -9,7 +9,7 @@
 import UIKit
 
 class TweetCell: UITableViewCell {
-
+    
     
     @IBOutlet weak var userLabel: UILabel!
     @IBOutlet weak var photoView: UIImageView!
@@ -25,7 +25,7 @@ class TweetCell: UITableViewCell {
         didSet {
             let tweet = tweetWrapped!
             let user = tweet.userForTweet
-                        
+            
             let usernameAsString = String(user!.name!) ?? ""
             userLabel.text = usernameAsString
             
@@ -53,7 +53,20 @@ class TweetCell: UITableViewCell {
         }
     }
     
- /*   func handleLikeButtonClicked() {
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+    }
+    
+    override func setSelected(selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+        
+        // Configure the view for the selected state
+    }
+    
+    
+/* //For refactoring purposes
+     func handleLikeButtonClicked() {
         //Get the tweet
         let tweet = tweetWrapped!
         
@@ -77,18 +90,8 @@ class TweetCell: UITableViewCell {
             }) { (error: NSError) in
             }
         }
-
+        
     }
- */   
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-
-    override func setSelected(selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
-
+ */
+    
 }

@@ -25,11 +25,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         //Get the first Navigation Controller and the first ViewController it has
         let tweetsNavController = storyboard.instantiateViewControllerWithIdentifier("TweetsNavigationController") as! UINavigationController
-/*        let tweetsViewController = tweetsNavController.topViewController as! TweetsViewController
-        
-        let userProfileViewController = ______
-        userProfileViewController.user =  //Wait don't I already set this nicely in the performSegue????
-*/
         
         //Get the second Navigation Controller and the first ViewController it has
         let myProfileNavController = storyboard.instantiateViewControllerWithIdentifier("MyProfileNavigationController") as! UINavigationController
