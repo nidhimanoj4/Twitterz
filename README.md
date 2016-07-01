@@ -1,6 +1,6 @@
 # Project 4 - Twitterz
 
-Twitterz is a basic twitter app to read and compose tweets the [Twitter API](https://apps.twitter.com/).
+Twitterz is a basic twitter app to read and compose tweets via the [Twitter API](https://apps.twitter.com/).
 
 Time spent: 40 hours spent in total
 
@@ -41,8 +41,8 @@ The following **additional** features are implemented:
 - [x] Added a cool bubble animation for pull-to-refresh in the Feed View
 - [x] Animated the login screen so that user can interact by moving the circle via gestures and can delete it by tapping twice
 - [x] Profile view includes the particular user's timeline
-- [x] Added a banner of the user's background photo to the user profile pages in the app
-- [x] UI features with a lauch screen and app icon among other UI touch-ups
+- [x] Added a banner of the user's background photo to the profile pages in the app
+- [x] UI touch-ups include a launch screen and app icon among others
 
 
 Please list two areas of the assignment you'd like to **discuss further with your peers** during the next class (examples include better ways to implement something, how to extend your app in certain ways, etc):
@@ -53,13 +53,12 @@ Please list two areas of the assignment you'd like to **discuss further with you
 
 Here's a walkthrough of implemented user stories (see link below):
 http://i.imgur.com/Uxr0qPA.gifv
-<img src='http://i.imgur.com/Uxr0qPA.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
 
-The implementing the retweeting/liking features and getting accustomed to the GET and POST functions in the Twitter API were somewhat difficult. Also, keeping track of the segues in the many pages was important, especially when passing data to various TableViews (home timeline and various user timelines). It took a while to understand how to manage the various constraints in Auto layout, but screen rotation made it worth the time and effort! The animations in the Feed and the login screen were the most exciting features for me in this project. 
+Implementing the retweeting/liking features and getting accustomed to the GET and POST functions in the Twitter API were somewhat difficult. Also, keeping track of the segues in the many pages was important, especially when passing data to various TableViews (home timeline and various user timelines). It took a while to understand how to manage the various constraints in Auto layout, but screen rotation made it worth the time and effort! The animations in the feed view and the login screen were the most exciting features in this project. 
 
 ## Credits
 
