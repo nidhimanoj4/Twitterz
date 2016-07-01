@@ -64,13 +64,13 @@ The implementing the retweeting/liking features and getting accustomed to the GE
 ## Credits
 
 List an 3rd party libraries, icons, graphics, or other assets you used in your app.
+- [AFNetworking] (https://github.com/AFNetworking/AFNetworking) - networking task library
+- [BDBOAuth1Manager] (https://github.com/bdbergeron/BDBOAuth1Manager) - supporting functionality for OAuth login flow
+- [PrettyTimestamp] (https://github.com/jonhocking/PrettyTimestamp) - formatting for relative time stamp
+- [SwiftyJSON] (https://github.com/SwiftyJSON/SwiftyJSON) - recommended for th
+- [DGElasticPullToRefresh] (https://github.com/gontovnik/DGElasticPullToRefresh) - animations used for the pull to refresh in the Feed view
 
-- [AFNetworking](https://github.com/AFNetworking/AFNetworking) - networking task library
-- [BDBOAuth1Manager] - supporting functionality for OAuth login flow
-- [PrettyTimestamp] - formatting for relative time stamp
-- [SwiftyJSON] - recommended for th
-- [DGElasticPullToRefresh] - animations used for the pull to refresh in the Feed view
-- 
+
 ## License
 
     Copyright 2016 Nidhi Manoj
